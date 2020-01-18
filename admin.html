@@ -10,66 +10,77 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-         
-    <script src=/socket.io/socket.io.js></script>
+    
     <script>
-        var socket = io('8080');          
-          
-        socket.on('ativos',function(info){
-            $('#spnAtivos').html(info);
-            $('#iptAtivos').val(info);
-        });
-        
-        socket.on('fila',function(info){
-            $('#spnFila').html(info);
-            $('#iptFila').val(info);
-        });
-        
-        socket.on('mensagem',function(info){
-            $('#spnMensagem').html(info);
-            $('#iptMensagem').val(info);
-        });
-        
-        socket.on('visualizando',function(info){
-            $('#spnVisualizando').html(info);
-        });
-        
-        socket.emit('all',false);        
-          
-        function setSock(txt){
-            if(txt == 'fila'){
-                socket.emit('set '+txt,$('#iptFila').val());
-            }else if(txt == 'ativos'){
-                socket.emit('set '+txt,$('#iptAtivos').val());
-            }else if(txt == 'mensagem'){
-                socket.emit('set '+txt,$('#iptMensagem').val());
-            }
+        if(location.protocol.substr(0,4) == 'http'){
+            caminho = location.host;
+        }else {
+            caminho = '';
         }
         
-        function troca(txt,mode){
-            var num = 0;
-            if(txt == 'fila'){
-                num = $('#iptFila').val();
-            }else if(txt == 'ativos'){
-                num = $('#iptAtivos').val();
-            }else if(txt == 'mensagem'){
-                num = $('#iptMensagem').val();
+        $.getScript( caminho+"/socket.io/socket.io.js" )
+        .done(function( script, textStatus ) {
+            var socket = io(caminho);             
+          
+            socket.on('ativos',function(info){
+                $('#spnAtivos').html(info);
+                $('#iptAtivos').val(info);
+            });
+            
+            socket.on('fila',function(info){
+                $('#spnFila').html(info);
+                $('#iptFila').val(info);
+            });
+            
+            socket.on('mensagem',function(info){
+                $('#spnMensagem').html(info);
+                $('#iptMensagem').val(info);
+            });
+            
+            socket.on('visualizando',function(info){
+                $('#spnVisualizando').html(info);
+            });
+            
+            socket.emit('all',false);        
+          
+            function setSock(txt){
+                if(txt == 'fila'){
+                    socket.emit('set '+txt,$('#iptFila').val());
+                }else if(txt == 'ativos'){
+                    socket.emit('set '+txt,$('#iptAtivos').val());
+                }else if(txt == 'mensagem'){
+                    socket.emit('set '+txt,$('#iptMensagem').val());
+                }
             }
             
-            if(mode == 1){
-                num++;  
-            }else if(mode == 2){
-                num--;
-            }else if(mode == 3){
-                num = 0;
-            }else if(mode == 4){
-                num = '';
+            function troca(txt,mode){
+                var num = 0;
+                if(txt == 'fila'){
+                    num = $('#iptFila').val();
+                }else if(txt == 'ativos'){
+                    num = $('#iptAtivos').val();
+                }else if(txt == 'mensagem'){
+                    num = $('#iptMensagem').val();
+                }
+                
+                if(mode == 1){
+                    num++;  
+                }else if(mode == 2){
+                    num--;
+                }else if(mode == 3){
+                    num = 0;
+                }else if(mode == 4){
+                    num = '';
+                }
+                
+                if(num <0) num = 0;
+                
+                socket.emit('set '+txt,num);
             }
-            
-            if(num <0) num = 0;
-            
-            socket.emit('set '+txt,num);
-        }
+        })
+        .fail(function( jqxhr, settings, exception ) {
+            $('#spnMensagem').html('Erro de conexão. <br>Connection error');
+        });
           
    </script>
 </head>
