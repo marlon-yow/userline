@@ -15,36 +15,41 @@
         if(location.protocol.substr(0,4) == 'http'){
             caminho = location.host;
             protocol = location.protocol+'://';
+            init();
         }else {
             caminho = '';
             protocol = 'http://'
+            init();
         }
         
-        $.getScript(protocol+ caminho+"/socket.io/socket.io.js" )
-        .done(function( script, textStatus ) {
-            var socket = io(caminho);          
-          
-            socket.on('fila',function(info){
-                $('#spnFila').html(info);
-                $('#iptFila').val(info);
-            });  
+        function init(){
+            console.log("get me:",protocol+ caminho+"/socket.io/socket.io.js")
+            $.getScript(protocol+ caminho+"/socket.io/socket.io.js" )
+            .done(function( script, textStatus ) {
+                var socket = io(caminho);          
             
-            socket.on('ativos',function(info){
-                $('#spnAtivos').html(info);
-                $('#iptAtivos').val(info);
+                socket.on('fila',function(info){
+                    $('#spnFila').html(info);
+                    $('#iptFila').val(info);
+                });  
+                
+                socket.on('ativos',function(info){
+                    $('#spnAtivos').html(info);
+                    $('#iptAtivos').val(info);
+                });
+                
+                socket.on('mensagem',function(info){
+                    $('#spnMensagem').html(info);
+                    $('#iptMensagem').val(info);
+                });
+                
+                socket.emit('all',false);
+    
+            })
+            .fail(function( jqxhr, settings, exception ) {
+                $('#spnMensagem').html('Erro de conexão. <br>Connection error');
             });
-            
-            socket.on('mensagem',function(info){
-                $('#spnMensagem').html(info);
-                $('#iptMensagem').val(info);
-            });
-            
-            socket.emit('all',false);
-   
-        })
-        .fail(function( jqxhr, settings, exception ) {
-            $('#spnMensagem').html('Erro de conexão. <br>Connection error');
-        });
+        }
     </script>
    
     <style>
