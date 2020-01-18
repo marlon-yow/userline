@@ -3,7 +3,7 @@
 const app = require('http').createServer(index);
 const io = require('socket.io')(app);
 const fs = require('fs');
-const port = 3000;
+const port = 8080;
  
  app.listen(port, function() {
    if(DBG) console.log("Servidor rodando!");
