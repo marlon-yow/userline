@@ -1,0 +1,55 @@
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    
+    <!--JQUERY -->
+    <script src=https://code.jquery.com/jquery-3.4.1.min.js></script>
+
+    <!-- BOTSTRAP -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        
+    <script src=/socket.io/socket.io.js></script>
+    <script>
+        var socket = io('');          
+          
+        socket.on('fila',function(info){
+            $('#spnFila').html(info);
+            $('#iptFila').val(info);
+        });  
+          
+        socket.on('ativos',function(info){
+            $('#spnAtivos').html(info);
+            $('#iptAtivos').val(info);
+        });
+        
+        socket.on('mensagem',function(info){
+            $('#spnMensagem').html(info);
+            $('#iptMensagem').val(info);
+        });
+        
+        socket.emit('all',false);
+    </script>
+   
+    <style>
+        #spnAtivos{ font-weight: bold; font-size:6em;}
+        body{font-size:4em;}
+    </style>
+</head>
+<body>
+    <div class='well'>
+        <span id='spnAtivos'>X</span>
+        <br><b>Ativos</b>
+        <br>
+        <b>Fila: </b>
+        <span id='spnFila'>Conectando...</span>        
+    </div>
+    
+    <div class='alert alert-info'>
+        <span id='spnMensagem'>Conectando...</span>
+    </div>
+    
+   </body>
+ </html>
